@@ -14,6 +14,9 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * 公平锁
+ * 公平锁与非公平锁的区别：
+    1）公平锁就是谁先进谁先执行，相当于放入队列中，一个个按顺序执行。
+    2）非公平锁就是看谁先抢到CPU的执行权谁先执行。
  * @Author Jadan-Z
  * @Date 2019/11/13
  */
