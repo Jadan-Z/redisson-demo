@@ -24,6 +24,7 @@ import java.util.concurrent.TimeUnit;
 @SpringBootTest
 public class FairLockTests {
     private Logger log = LoggerFactory.getLogger(FairLockTests.class);
+
     @Autowired
     private RedissonClient redissonClient;
 
@@ -38,12 +39,12 @@ public class FairLockTests {
         } else {
             // 加锁：默认30s过期
 //            fairLock.lock();
-
             // 指定过期时间：10s
 //            fairLock.lock(10, TimeUnit.SECONDS);
-
             try {
                 // 尝试加锁，最多等待2s，加锁3s后过期
+                // 注意: 实际开发时，需将锁定时长尽量锁长，防止没有执行锁定的业务逻辑，就被释放锁。
+                //      同时在finally中，释放锁，防止死锁。
                 boolean tryLock = fairLock.tryLock(2, 3, TimeUnit.SECONDS);
                 if(!tryLock) {
                     log.info("尝试加锁失败");
@@ -52,6 +53,9 @@ public class FairLockTests {
                 log.info("尝试加锁：{}", tryLock == true? "success": "error");
             } catch (InterruptedException e) {
                 log.info("加锁中...");
+            } finally {
+                // 无论失败与否, 都释放锁
+                fairLock.unlock();
             }
             log.info("加锁成功");
         }
