@@ -1,4 +1,4 @@
-package com.jadan.demo.config;
+package com.jadan.config;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;

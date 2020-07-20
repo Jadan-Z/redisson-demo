@@ -1,4 +1,4 @@
-package com.jadan.demo.redisson;
+package com.jadan.redisson;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

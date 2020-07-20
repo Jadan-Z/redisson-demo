@@ -1,19 +1,14 @@
-package com.jadan.demo;
+package com.jadan;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.redisson.api.*;
-import org.redisson.client.codec.IntegerCodec;
-import org.redisson.client.codec.StringCodec;
 import org.redisson.config.Config;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
-
-import java.util.HashMap;
-import java.util.Map;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 
@@ -38,79 +33,6 @@ public class RedissonTests {
     }
     // 使用:分割，便于查看
 
-    // 字符串类型赋值
-    @Test
-    public void setBucket() {
-        // 无过期时间
-        redissonClient.getBucket("com:jadan:test:name1").set("jadan1");  // "jadan1"
-        redissonClient.getBucket("com:jadan:test:name2", StringCodec.INSTANCE).set("jadan2");  // jadan2
-
-        // Integer类型
-        redissonClient.getBucket("com:jadan:test:age", IntegerCodec.INSTANCE).set(2);
-
-        // 设置过期时间
-        redissonClient.getBucket("com:jadan:test:name3").set("jadan3", EFFECTIVE_DURATION, TimeUnit.SECONDS);  // "jadan3" 过期时间为10s
-        redissonClient.getBucket("com:jadan:test:name4", StringCodec.INSTANCE).set("jadan4", EFFECTIVE_DURATION, TimeUnit.SECONDS); // jadan4 过期时间为10s
-    }
-
-    // 获取字符串对象： 怎么存怎么取，存+StringCodec.INSTANCE,取也要加，否则为null。
-    @Test
-    public void getBucket() {
-        RBucket<Object> bucket1 = redissonClient.getBucket("com:jadan:test:name1");
-        RBucket<Object> bucket2 = redissonClient.getBucket("com:jadan:test:name2", StringCodec.INSTANCE);
-        RBucket<Object> bucket3 = redissonClient.getBucket("com:jadan:test:name3");
-        RBucket<Object> bucket4 = redissonClient.getBucket("com:jadan:test:name4", StringCodec.INSTANCE);
-        Object o1 = bucket1.get();
-        Object o2 = bucket2.get();
-        Object o3 = bucket3.get();
-        Object o4 = bucket4.get();
-        log.info("Str1: {}", o1);
-        log.info("Str2: {}", o2);
-        log.info("Str3: {}", o3);
-        log.info("Str4: {}", o4);
-    }
-
-    // 删除字符串类型的节点: 根据键值移除
-    @Test
-    public void delBucket() {
-        boolean delName1 = redissonClient.getBucket("com:jadan:test:name1").delete();
-        log.info("delete: {}", delName1);
-    }
-
-    // 散列类型（hash）赋值
-    @Test
-    public void setMap() {
-        RMap<Object, Object> map1 = redissonClient.getMap("map1");
-        Map<String, Object> map = new HashMap<>();
-        map.put("k1", "v1");
-        map.put("k2", "v2");
-        map1.putAll(map);
-
-        // StringCodec.INSTANCE
-        RMap<Object, Object> map2 = redissonClient.getMap("map2", MapOptions.defaults());
-        map2.putAll(map);
-
-        // 使用MapOptions.defaults(), 在原来的map上追加数据  ---> 观察数据
-        RMap<Object, Object> map3 = redissonClient.getMap("map3", StringCodec.INSTANCE, MapOptions.defaults());
-        map3.putAll(map);
-    }
-
-    // 获取Map对象
-    @Test
-    public void getMap() {
-        // 删除整个hash节点
-        boolean map1Del = redissonClient.getMap("map1").delete();
-        boolean map2Del = redissonClient.getMap("map2").delete();
-        boolean map3Del = redissonClient.getMap("map3").delete();
-
-        // 删除字段并返回删除个数
-        long map1 = redissonClient.getMap("map1").fastRemove("k1");
-        // 删除字段并返回映射值
-        Object remove = redissonClient.getMap("map1").remove("k2");
-
-        log.info("map1: {}", map1);
-    }
-
     // 获取有序集合： redissonClient.getSortedSet(objectName)
 
     // 获取集合: redissonClient.getSet(objectName)
@@ -130,8 +52,6 @@ public class RedissonTests {
     // 获取记数锁: redissonClient.getCountDownLatch(objectName)
 
     // 获取消息的Topic：redissonClient.getTopic(objectName)
-
-
 
     /**
      * 可重入锁：

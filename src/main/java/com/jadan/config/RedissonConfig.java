@@ -1,4 +1,4 @@
-package com.jadan.demo.config;
+package com.jadan.config;
 
 import org.redisson.Redisson;
 import org.redisson.api.RedissonClient;
@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 /**
- * redisson配置
+ * redis配置：单机、主从、哨兵等
  * @Author Jadan-Z
  * @Date 2019/11/13
  */
@@ -46,6 +46,4 @@ public class RedissonConfig {
 //                .addNodeAddress("127.0.0.1:7002");
         return Redisson.create(config);
     }
-
-
 }
